@@ -1,3 +1,5 @@
+
+//import React from 'react';
 import ListMaterial from '../src/components/listMaterial';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +10,10 @@ const Home = () => {
       <ListMaterial />
       <Link to="/upload" className="mt-4 inline-block text-blue-500">
         Subir Producto
+      </Link>
+      <br />
+      <Link to="/details" className="mt-4 inline-block text-green-500">
+        Ver Detalles del Producto
       </Link>
     </div>
   );
