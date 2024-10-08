@@ -16,4 +16,32 @@ const App = () => {
   );
 }
 
+//-----JG
+// src/App.js
+import React from 'react';
+import ProductList from './components/ProductList';
+
+function App() {
+  return (
+    <div className="bg-yellow-300 min-h-screen">
+      <header className="bg-yellow-600 p-4 text-white text-center">
+        <h1 className="text-2xl font-bold">Gestión de Productos</h1>
+      </header>
+
+      <div className="container mx-auto">
+        <ProductList />
+      </div>
+
+      <footer className="bg-black text-white text-center py-4 mt-8">
+        Footer
+      </footer>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
 export default App;
