@@ -13,12 +13,13 @@ function App() {
       <div className="container mx-auto p-4">
         <ProductEditor />
         
-        <div className="my-6">
+        <div className="my-6 grid-cols-2">
           <input
             type="text"
             placeholder="Buscar productos"
             className="w-full p-2 border rounded"
           />
+          <button className="bg-green-500 text-white p-3 rounded">Buscar</button>
         </div>
         
         <ProductList />

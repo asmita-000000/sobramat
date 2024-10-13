@@ -20,13 +20,13 @@ const ProductEditor = () => {
 
   return (
     <div className="bg-yellow-500 p-6 rounded-md text-black">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div>
           <input
             type="text"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
-            placeholder="Agrega un título que informe lo que es el producto"
+            placeholder="Nombre del producto"
             className="w-full p-2 border rounded"
           />
           {hasError && !productName && (
@@ -38,19 +38,31 @@ const ProductEditor = () => {
             type="text"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="Agrega números para mostrar el precio"
+            placeholder="Bs. Ingrese el precio"
             className="w-full p-2 border rounded"
           />
           {hasError && !price && (
             <p className="text-red-500">* Ingresa el precio del producto</p>
           )}
         </div>
+        <div>
+          <input
+            type="text"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Número de celular"
+            className="w-full p-2 border rounded"
+          />
+          {hasError && !price && (
+            <p className="text-red-500">* Ingresa su número de celular</p>
+          )}
+        </div>
       </div>
-      
+
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        placeholder="Escribe una descripción válida del producto"
+        placeholder="Descripción del producto"
         className="w-full p-2 border rounded mt-4"
       />
       {hasError && !description && (
@@ -77,6 +89,14 @@ const ProductEditor = () => {
             className="w-full p-2 border rounded"
           >
             <option value="COCHABAMBA">COCHABAMBA</option>
+            <option value="PANDO">PANDO</option>
+            <option value="BENI">BENI</option>
+            <option value="SANTA CRUZ">SANTA CRUZ</option>
+            <option value="TARIJA">TARIJA</option>
+            <option value="CHUQUISACA">CHUQUISACA</option>
+            <option value="ORURO">ORURO</option>
+            <option value="POTOSÍ">POTOSÍ</option>
+            <option value="LA PAZ">LA PAZ</option>
           </select>
         </div>
       </div>
