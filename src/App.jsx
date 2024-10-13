@@ -1,6 +1,5 @@
-import './App.css';
-import React from 'react';
 // src/App.js
+import React from 'react';
 import ProductEditor from './components/ProductEditor';
 import ProductList from './components/ProductList';
 
@@ -33,4 +32,3 @@ function App() {
 }
 
 export default App;
-
