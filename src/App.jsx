@@ -1,18 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from 'react-router-dom';
+import Home from '../views/home';
+import UploadProduct from './components/uploadProduct';
+import DetailsProduct from './components/DetailsProduct';
+import EditProduct from './components/EditProduct';
+import ListMaterial from './components/listMaterial'; // Asegúrate de importar este componente
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        sobra mat
-       </div>
-    </>
-  )
-}
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/upload" element={<UploadProduct />} />
+        <Route path="/details/:id" element={<DetailsProduct />} />
+        <Route path="/edit/:id" element={<EditProduct />} />
+        <Route path="/listMaterial" element={<ListMaterial />} /> {/* Nueva ruta */}
+      </Routes>
+    </div>
+  );
+};
 
-export default App
+export default App;
