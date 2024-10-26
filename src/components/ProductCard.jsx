@@ -3,18 +3,16 @@ import React from 'react';
 const ProductCard = ({ product, onEdit, onDelete }) => {
     return (
         <div className="border rounded-lg p-4 shadow-lg bg-white">
-            <h3 className="font-bold">{product.productName}</h3>
+            <h3 className="font-bold">{product.name}</h3> {/* Cambié productName a name */}
             <p>Precio: Bs. {product.price}</p>
-            <p>Descripción: {product.description}</p>
-            <p>Estado: {product.state}</p>
+            <p>Estado: {product.condition}</p> {/* Cambié description a condition */}
             <p>Categoría: {product.category}</p>
-            <p>Departamento: {product.department}</p>
-            <p>Número de contacto: {product.locationReference}</p>
+            {/* Puedes agregar más detalles aquí según la estructura de tu objeto de producto */}
             <div className="mt-4">
-                <button onClick={onEdit} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
+                <button onClick={() => onEdit(product.id)} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                     Editar
                 </button>
-                <button onClick={onDelete} className="bg-red-500 text-white px-2 py-1 rounded">
+                <button onClick={() => onDelete(product.id)} className="bg-red-500 text-white px-2 py-1 rounded">
                     Eliminar
                 </button>
                 <button className="bg-blue-500 text-white px-2 py-1 rounded ml-2">

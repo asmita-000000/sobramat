@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
 
-
 const UploadProduct = () => {
     const [productName, setProductName] = useState('');
     const [price, setPrice] = useState('');
@@ -14,7 +13,6 @@ const UploadProduct = () => {
     const [locationReference, setLocationReference] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const [showForm, setShowForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     const navigate = useNavigate();
@@ -27,7 +25,7 @@ const UploadProduct = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     setImage(reader.result);
-                    setErrorMessage(''); 
+                    setErrorMessage('');
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -53,51 +51,36 @@ const UploadProduct = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         const missingFields = validateForm();
-        
+
         if (missingFields.length > 0) {
             setErrorMessage(`Por favor, completa los siguientes campos: ${missingFields.join(', ')}`);
             return;
         }
 
         setShowConfirmation(true);
-        setErrorMessage(''); 
+        setErrorMessage('');
     };
 
     const confirmPublish = () => {
-        const formData = new FormData();
-        formData.append('nombre_producto', productName);
-        formData.append('estado_producto', state);
-        formData.append('descripcion', description);
-        formData.append('precio', price);
-        formData.append('categoria_id', category);
-        formData.append('departamento', department);
-        formData.append('numero_celular', locationReference);
-        
-        if (image) {
-            formData.append('imagen_url', document.getElementById('file-upload').files[0]);
-        }
+        // Simular la publicación del producto
+        const newProduct = {
+            nombre_producto: productName,
+            estado_producto: state,
+            descripcion: description,
+            precio: price,
+            categoria: category,
+            departamento: department,
+            numero_celular: locationReference,
+            imagen: image,
+        };
 
-        fetch('http://localhost:5000/products/agregar-producto', {
-            method: 'POST',
-            body: formData, 
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                setShowSuccessMessage(true);
-            } else {
-                alert(data.message || 'Producto Registrado ');
-            }
-        })
-        .catch(error => {
-            console.error('Subio correctamente el componente:', error);
-            alert('Ocurrió un error al publicar el producto. Inténtalo de nuevo más tarde.');
-        });
+        console.log('Producto publicado:', newProduct); // Imprimir el producto en la consola (simular almacenamiento)
 
+        setShowSuccessMessage(true);
         resetForm();
-        setShowConfirmation(false); 
+        setShowConfirmation(false);
     };
 
     const resetForm = () => {
@@ -113,221 +96,187 @@ const UploadProduct = () => {
 
     return (
         <div className="bg-gray-800 min-h-screen flex items-center justify-center">
-            {showForm && (
-                <form onSubmit={handleSubmit} className="relative flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-50 px-10">
-                    <button
-                        type="button"
-                        onClick={() => setShowForm(false)}
-                        className="absolute top-4 right-4 bg-transparent text-gray-900 hover:text-gray-700 text-2xl font-bold focus:outline-none"
-                    >
-                      
-                    </button>
-
-                    <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
-                        <h2 className="text-2xl font-bold mb-4">Vista previa de imagen</h2>
-                        <div className="flex flex-wrap justify-center">
-                            {image && (
-                                <div className="relative m-2">
-                                    <img src={image} alt="Vista previa" className="w-full h-auto object-cover rounded-lg" />
-                                    <button
-                                        onClick={() => setImage(null)} 
-                                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                                        type="button"
-                                    >
-                                        &times;
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                        <div className="mt-2 text-center">
-                            {image ? 'Imagen seleccionada' : 'Puedes agregar una imagen.'}
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <input
-                                id="file-upload"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="hidden"
-                            />
-                            <label
-                                htmlFor="file-upload"
-                                className="cursor-pointer border border-gray-100 bg-gray-100/65 rounded-lg w-full p-10 mb-1 text-gray-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-600 mt-1 text-center"
-                            >
-                                <div className="flex flex-col items-center">
-                                    <i className="fa fa-image text-gray-700" style={{ fontSize: '40px' }}></i>
-                                    {image ? 'Cambiar imagen' : 'Elegir Imagen'}
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className="md:w-1/2 md:pl-4">
-                        <h1 className="text-3xl font-bold mb-6 text-center">Producto en venta</h1>
-                        {errorMessage && (
-                            <div className="text-red-500 mb-4">{errorMessage}</div>
-                        )}
-                        <div className="flex items-center mb-3">
-                            <div className="relative mr-4">
-                                <input
-                                    type="text"
-                                    maxLength={80}
-                                    value={productName}
-                                    onChange={(e) => setProductName(e.target.value)}
-                                    className="border border-gray-300 rounded-lg w-80 p-1 pr-12 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                                    placeholder="Nombre del producto*"
-                                    required
-                                />
-                                <span className="absolute right-3 top-2 text-gray-500 text-sm">
-                                    {productName.length}/80
-                                </span>
+            <form onSubmit={handleSubmit} className="relative flex flex-col md:flex-row justify-center items-center bg-yellow-400 p-16 rounded-lg shadow-lg max-w-7xl mx-auto mt-50 px-10">
+                <div className="border border-gray-100 bg-gray-100/65 rounded-lg w-[600px] h-[600px] mx-auto p-5 mb-30 flex flex-col items-center">
+                    <h2 className="text-2xl font-bold mb-4">Vista previa de imagen</h2>
+                    <div className="flex flex-wrap justify-center">
+                        {image && (
+                            <div className="relative m-2">
+                                <img src={image} alt="Vista previa" className="w-full h-auto object-cover rounded-lg" />
                             </div>
+                        )}
+                    </div>
+                    <div className="mt-2 text-center">
+                        {image ? 'Imagen seleccionada' : 'Puedes agregar una imagen.'}
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <input
+                            id="file-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                        />
+                        <label
+                            htmlFor="file-upload"
+                            className="cursor-pointer border border-gray-100 bg-gray-100/65 rounded-lg w-full p-10 mb-1 text-gray-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-600 mt-1 text-center"
+                        >
+                            <div className="flex flex-col items-center">
+                                <i className="fa fa-image text-gray-700" style={{ fontSize: '40px' }}></i>
+                                {image ? 'Cambiar imagen' : 'Elegir Imagen'}
+                            </div>
+                        </label>
+                    </div>
+                </div>
 
-                            <select
-                                value={state}
-                                onChange={(e) => setState(e.target.value)}
-                                className="border bg-gray-200/80 rounded-lg w-50 w-full p-1 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                <div className="md:w-1/2 md:pl-4">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Producto en venta</h1>
+                    {errorMessage && (
+                        <div className="text-red-500 mb-4">{errorMessage}</div>
+                    )}
+                    <div className="flex items-center mb-3">
+                        <div className="relative mr-4">
+                            <input
+                                type="text"
+                                maxLength={80}
+                                value={productName}
+                                onChange={(e) => setProductName(e.target.value)}
+                                className="border border-gray-300 rounded-lg w-80 p-1 pr-12 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                                placeholder="Nombre del producto*"
                                 required
-                            >
-                                <option value="">Seleccionar estado*</option>
-                                <option value="nuevo">Nuevo</option>
-                                <option value="usado - como nuevo">Usado - Como nuevo</option>
-                                <option value="usado - buen estado">Usado - Buen estado</option>
-                                <option value="usado - aceptable">Usado - Aceptable</option>
-                            </select>
+                            />
+                            <span className="absolute right-3 top-2 text-gray-500 text-sm">
+                                {productName.length}/80
+                            </span>
                         </div>
-
-                        <div className="flex items-center border border-gray-300 rounded-lg w-full p-3 mb-4 focus-within:ring-2 focus-within:ring-yellow-600 bg-white">
-    <span className="text-gray-500 mr-2">Bs.</span>
-    <input
-        type="text"
-        value={price}
-        onChange={(e) => {
-            const value = e.target.value;
-            
-            if (/^\d*\.?\d*$/.test(value) && value.length <= 7) {
-                setPrice(value);
-            }
-        }}
-        className="flex-1 border-none focus:outline-none"
-        placeholder="Ingrese el precio*"
-        required
-    />
-</div>
-
-<textarea
-    value={description}
-    maxLength={400}
-    onChange={(e) => setDescription(e.target.value)}
-    className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-    placeholder="Descripción del producto*"
-    required
-    rows={5}  // Puedes ajustar el número de filas visibles
-    style={{ resize: 'none', height: '150px' }}  // Evita que el textarea sea redimensionable
-></textarea>
 
                         <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                            value={state}
+                            onChange={(e) => setState(e.target.value)}
+                            className="border bg-gray-200/80 rounded-lg w-50 w-full p-1 focus:outline-none focus:ring-2 focus:ring-yellow-600"
                             required
                         >
-                            <option value="">Seleccionar categoría*</option>
-                            <option value="1">Electronica</option>
-                            <option value="2">Muebles</option>
-                            <option value="3">Ropa</option>
-                       
+                            <option value="">Seleccionar estado*</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado - como nuevo">Usado - Como nuevo</option>
+                            <option value="usado - buen estado">Usado - Buen estado</option>
+                            <option value="usado - aceptable">Usado - Aceptable</option>
                         </select>
+                    </div>
 
+                    <div className="flex items-center border border-gray-300 rounded-lg w-full p-3 mb-4 focus-within:ring-2 focus-within:ring-yellow-600 bg-white">
+                        <span className="text-gray-500 mr-2">Bs.</span>
                         <input
                             type="text"
-                            value={locationReference}
+                            value={price}
                             onChange={(e) => {
                                 const value = e.target.value;
-                                if (/^\d*$/.test(value) || value === '') {
-                                    setLocationReference(value);
+
+                                if (/^\d*\.?\d*$/.test(value) && value.length <= 7) {
+                                    setPrice(value);
                                 }
                             }}
-                            placeholder="Número de celular*"
-                            className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                            className="flex-1 border-none focus:outline-none"
+                            placeholder="Ingrese el precio*"
                             required
                         />
-
-                        <select
-                            value={department}
-                            onChange={(e) => setDepartment(e.target.value)}
-                            className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
-                            required
-                        >
-                            <option value="">Seleccionar departamento*</option>
-                            <option value="La Paz">La Paz</option>
-                            <option value="Cochabamba">Cochabamba</option>
-                            <option value="Santa Cruz">Santa Cruz</option>
-                            <option value="Oruro">Oruro</option>
-                            <option value="Potosí">Potosí</option>
-                            <option value="Tarija">Tarija</option>
-                            <option value="Beni">Beni</option>
-                            <option value="Pando">Pando</option>
-                            <option value="Sucre">Sucre</option>
-                        </select>
-
-                        <div className="flex justify-center">
-                            <button
-                                type="submit"
-                                className={`w-full bg-green-500 hover:bg-yellow-500  text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-yellow-600`}
-                            >
-                                Publicar Producto
-                            </button>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => navigate('/listMaterial')} // Llama a navigate al hacer clic
-                            className="mt-2 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
-                        >
-                            Atrás
-                        </button>
                     </div>
-                </form>
-            )}
+
+                    <textarea
+                        value={description}
+                        maxLength={400}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                        placeholder="Descripción del producto*"
+                        required
+                        rows={5}
+                        style={{ resize: 'none', height: '150px' }}
+                    ></textarea>
+
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                        required
+                    >
+                        <option value="">Seleccionar categoría*</option>
+                        <option value="1">Electrónica</option>
+                        <option value="2">Muebles</option>
+                        <option value="3">Ropa</option>
+                    </select>
+
+                    <input
+                        type="text"
+                        value={locationReference}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (/^\d*$/.test(value) || value === '') {
+                                setLocationReference(value);
+                            }
+                        }}
+                        placeholder="Número de celular*"
+                        className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                        required
+                    />
+
+                    <select
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value)}
+                        className="border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                        required
+                    >
+                        <option value="">Seleccionar departamento*</option>
+                        <option value="Lima">Lima</option>
+                        <option value="Arequipa">Arequipa</option>
+                        <option value="Cuzco">Cuzco</option>
+                    </select>
+
+                    <button
+                        type="submit"
+                        className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-yellow-600 w-full"
+                    >
+                        Publicar producto
+                    </button>
+                </div>
+            </form>
 
             {showConfirmation && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-yellow-500 p-8 rounded-lg shadow-lg">
-                        <p>¿Estás seguro de que deseas publicar este producto?</p>
-                        <div className="flex justify-around mt-4">
-                           
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-lg font-bold mb-4">Confirmación de publicación</h2>
+                        <p>¿Está seguro de que desea publicar este producto?</p>
+                        <div className="flex justify-between mt-4">
                             <button
+                                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
                                 onClick={() => setShowConfirmation(false)}
-                                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
                             >
                                 Cancelar
                             </button>
                             <button
+                                className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
                                 onClick={confirmPublish}
-                                className="bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none"
                             >
-                                Sí, publicar
+                                Confirmar
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
-{showSuccessMessage && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg shadow-lg">
-                        <p>Producto publicado exitosamente.</p>
+            {showSuccessMessage && (
+                <div className="fixed inset-0 flex items-center justify-center bg-green-500 bg-opacity-80">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-lg font-bold mb-4">¡Éxito!</h2>
+                        <p>Tu producto ha sido publicado con éxito.</p>
                         <button
-                            onClick={() => setShowSuccessMessage(true)}
-                            className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none"
+                            className="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded mt-4"
+                            onClick={() => navigate('/')}
                         >
-                            Cerrar
+                            Volver a la página principal
                         </button>
-                       
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const EditProduct = () => {
+const EditarProducto = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [product, setProduct] = useState({
+    const [producto, setProducto] = useState({
         nombre_producto: '',
         descripcion: '',
         precio: '',
@@ -14,133 +14,101 @@ const EditProduct = () => {
         imagen_url: '',
         numero_celular: '',
     });
-    const [originalProduct, setOriginalProduct] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [productoOriginal, setProductoOriginal] = useState({});
+    const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
-    const [imageFile, setImageFile] = useState(null);
-    const [previewImage, setPreviewImage] = useState(''); // Para mostrar la vista previa
-    const [showModal, setShowModal] = useState(false);
+    const [archivoImagen, setArchivoImagen] = useState(null);
+    const [vistaPreviaImagen, setVistaPreviaImagen] = useState('');
+    const [mostrarModal, setMostrarModal] = useState(false);
+    const [enviando, setEnviando] = useState(false);
 
     const categorias = [
-        { id: 1, nombre: 'Electrónica' },
-        { id: 2, nombre: 'Muebles' },
-        { id: 3, nombre: 'Ropa' },
+        { id: 1, nombre: 'Cemento' },
+        { id: 2, nombre: 'Hormigón' },
+        { id: 3, nombre: 'Ladrillos' },
     ];
 
-    const departamentos = ['La Paz','Cochabamba', 'Santa Cruz','Oruro','Potosi','Tarija','Beni','Pando','Sucre'];
-    const estados = ['Nuevo', 'usado - como nuevo', 'usado - buen estado', 'usado - aceptable'];
+    const departamentos = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosi', 'Tarija', 'Beni', 'Pando', 'Sucre'];
+    const estados = ['Nuevo', 'Usado - como nuevo', 'Usado - buen estado', 'Usado - aceptable'];
 
-    const fetchProduct = async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/products/${id}`);
-            if (!response.ok) {
-                throw new Error('Error al cargar el producto');
-            }
-            const data = await response.json();
-            setProduct(data);
-            setOriginalProduct(data);
-            setPreviewImage(data.imagen_url); // Setear la imagen original para la vista previa
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
+    const obtenerProducto = () => {
+        // Simulación de un producto para editar
+        const productoSimulado = {
+            id: id,
+            nombre_producto: 'Producto Simulado',
+            descripcion: 'Descripción del producto simulado',
+            precio: 10000,
+            estado_producto: 'Nuevo',
+            categoria_id: 1,
+            departamento: 'Cochabamba',
+            imagen_url: '/images/product1.jpg',
+            numero_celular: '123456789',
+        };
+        
+        setProducto(productoSimulado);
+        setProductoOriginal(productoSimulado);
+        setVistaPreviaImagen(productoSimulado.imagen_url);
+        setCargando(false);
     };
 
     useEffect(() => {
-        fetchProduct();
+        obtenerProducto();
     }, [id]);
 
-    const handleChange = (e) => {
+    const manejarCambio = (e) => {
         const { name, value } = e.target;
-
-        if (name === 'nombre_producto' && value.length > 80) { // Limitar a 80 caracteres
-            setProduct((prevProduct) => ({
-                ...prevProduct,
-                [name]: value.slice(0, 80),
-            }));
-        } else if (name === 'descripcion' && value.length > 400) { // Limitar a 400 caracteres
-            setProduct((prevProduct) => ({
-                ...prevProduct,
-                [name]: value.slice(0, 400),
-            }));
-        } else if (name === 'precio' && value < 0) {
-            return; 
-        } else {
-            setProduct((prevProduct) => ({
-                ...prevProduct,
-                [name]: value,
-            }));
-        }
+        setProducto((prevProducto) => ({
+            ...prevProducto,
+            [name]: value,
+        }));
     };
 
-    const handleImageChange = (e) => {
+    const manejarCambioImagen = (e) => {
         const file = e.target.files[0];
-        setImageFile(file);
+        setArchivoImagen(file);
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setPreviewImage(reader.result); // Establecer la vista previa de la imagen
+                setVistaPreviaImagen(reader.result);
             };
             reader.readAsDataURL(file);
         } else {
-            setPreviewImage(product.imagen_url); // Restablecer a la imagen original si no hay archivo
+            setVistaPreviaImagen(producto.imagen_url);
         }
     };
 
-    const handleSubmit = (e) => {
+    const manejarEnvio = (e) => {
         e.preventDefault();
-        console.log("Submit clicked");
-        setShowModal(true);
+        setMostrarModal(true);
     };
 
-    const confirmUpdate = async () => {
-        console.log("Confirm update called");
-        const formData = new FormData();
-        formData.append('nombre_producto', product.nombre_producto);
-        formData.append('descripcion', product.descripcion);
-        formData.append('precio', product.precio);
-        formData.append('estado_producto', product.estado_producto);
-        formData.append('categoria_id', product.categoria_id);
-        formData.append('departamento', product.departamento);
-        formData.append('numero_celular', product.numero_celular);
+    const confirmarActualizacion = () => {
+        setEnviando(true); // Comienza el proceso de envío
+        // Aquí se simula la actualización del producto
+        console.log("Producto actualizado:", producto);
 
-        if (imageFile) {
-            formData.append('imagen_url', imageFile);
-        }
-
-        console.log("Updating product with data:", formData);
-
-        try {
-            const response = await fetch(`http://localhost:5000/products/${id}`, {
-                method: 'PUT',
-                body: formData,
-            });
-            if (!response.ok) {
-                throw new Error('Error al actualizar el producto');
-            }
-            navigate(`/details/${id}`);
-        } catch (err) {
-            setError(err.message);
-        }
-        setShowModal(false);
+        // Simulación de espera
+        setTimeout(() => {
+            alert('Producto actualizado con éxito');
+            setEnviando(false); // Detiene el envío
+            navigate(`/detalles/${id}`);
+        }, 1000);
     };
 
-    const cancelUpdate = () => {
-        console.log("Cancel update called");
-        setShowModal(false);
+    const cancelarActualizacion = () => {
+        setMostrarModal(false);
     };
 
-    const hasChanges = Object.keys(product).some((key) => product[key] !== originalProduct[key]);
+    const tieneCambios = Object.keys(producto).some((key) => producto[key] !== productoOriginal[key]);
 
-    if (loading) return <div>Cargando...</div>;
+    if (cargando) return <div>Cargando...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
 
     return (
         <div className="bg-gray-800 text-white p-5">
             <h1 className="text-3xl font-bold text-center mb-4">Editar Producto</h1>
             <form
-                onSubmit={handleSubmit}
+                onSubmit={manejarEnvio}
                 className="max-w-lg mx-auto bg-yellow-400 p-5 rounded-lg shadow-lg"
                 encType="multipart/form-data"
             >
@@ -151,8 +119,8 @@ const EditProduct = () => {
                     <input
                         type="text"
                         name="nombre_producto"
-                        value={product.nombre_producto}
-                        onChange={handleChange}
+                        value={producto.nombre_producto}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                         maxLength="80"
@@ -164,8 +132,8 @@ const EditProduct = () => {
                     </label>
                     <textarea
                         name="descripcion"
-                        value={product.descripcion}
-                        onChange={handleChange}
+                        value={producto.descripcion}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                         maxLength="400"
@@ -178,8 +146,8 @@ const EditProduct = () => {
                     <input
                         type="number"
                         name="precio"
-                        value={product.precio}
-                        onChange={handleChange}
+                        value={producto.precio}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                         min="0"
@@ -191,8 +159,8 @@ const EditProduct = () => {
                     </label>
                     <select
                         name="estado_producto"
-                        value={product.estado_producto}
-                        onChange={handleChange}
+                        value={producto.estado_producto}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                     >
@@ -210,8 +178,8 @@ const EditProduct = () => {
                     </label>
                     <select
                         name="categoria_id"
-                        value={product.categoria_id}
-                        onChange={handleChange}
+                        value={producto.categoria_id}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                     >
@@ -229,8 +197,8 @@ const EditProduct = () => {
                     </label>
                     <select
                         name="departamento"
-                        value={product.departamento}
-                        onChange={handleChange}
+                        value={producto.departamento}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                     >
@@ -249,8 +217,8 @@ const EditProduct = () => {
                     <input
                         type="text"
                         name="numero_celular"
-                        value={product.numero_celular}
-                        onChange={handleChange}
+                        value={producto.numero_celular}
+                        onChange={manejarCambio}
                         className="w-full p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                         required
                     />
@@ -262,39 +230,31 @@ const EditProduct = () => {
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageChange}
+                        onChange={manejarCambioImagen}
                         className="p-2 rounded bg-white-900 text-gray-500 border border-gray-600"
                     />
-                    {previewImage && <img src={previewImage} alt="Vista previa" className="mt-2 w-full h-auto" />}
+                    {vistaPreviaImagen && <img src={vistaPreviaImagen} alt="Vista previa" className="mt-2 w-full h-auto" />}
                 </div>
                 <button
                     type="submit"
-                    className={`w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    disabled={!hasChanges}
+                    className={`w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ${!tieneCambios ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={!tieneCambios || enviando}
                 >
-                    Actualizar Producto
+                    {enviando ? 'Actualizando...' : 'Actualizar Producto'}
                 </button>
             </form>
 
-            {/* Modal de Confirmación */}
-            {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
-                    <div className="bg-white text-black p-5 rounded shadow-lg z-10">
-                        <h2 className="text-xl font-bold mb-4">Confirmar Actualización</h2>
-                        <p>¿Estás seguro de que deseas actualizar este producto?</p>
-                        <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={confirmUpdate}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                            >
-                                Confirmar
-                            </button>
-                            <button
-                                onClick={cancelUpdate}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                            >
+            {mostrarModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 rounded-lg text-black">
+                        <h2 className="text-xl font-bold mb-4">Confirmar actualización</h2>
+                        <p>¿Estás seguro de que deseas actualizar el producto?</p>
+                        <div className="flex justify-end mt-4">
+                            <button onClick={cancelarActualizacion} className="bg-red-500 text-white py-2 px-4 rounded mr-2">
                                 Cancelar
+                            </button>
+                            <button onClick={confirmarActualizacion} className="bg-green-500 text-white py-2 px-4 rounded">
+                                Confirmar
                             </button>
                         </div>
                     </div>
@@ -304,4 +264,4 @@ const EditProduct = () => {
     );
 };
 
-export default EditProduct;
+export default EditarProducto;
