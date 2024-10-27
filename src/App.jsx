@@ -1,5 +1,6 @@
-// src/App.js
 import React from 'react';
+import './index.css'; // Ensure Tailwind CSS styles are applied
+import CustomNavbar from './CustomNavbar';
 import ProductEditor from './components/ProductEditor';
 import ProductList from './components/ProductList';
 
@@ -12,14 +13,21 @@ function App() {
 
   return (
     <div className="bg-gray-800 min-h-screen">
+      {/* Navbar */}
+      <CustomNavbar />
+
+      {/* Header */}
       <header className="bg-yellow-600 p-4 text-white text-center">
         <h1 className="text-2xl font-bold">Gestión de Productos</h1>
       </header>
 
-      <div className="container mx-auto p-4">
+      {/* Main Content */}
+      <main className="container mx-auto p-4">
+        {/* Product Editor */}
         <ProductEditor />
-        
-        <div className="my-6 grid-cols-2">
+
+        {/* Search Bar */}
+        <div className="my-6 flex items-center">
           <input
             type="text"
             placeholder="Buscar productos"
@@ -27,10 +35,12 @@ function App() {
           />
           <button className="w-auto ml-2 bg-green-500 text-white p-3 rounded">Buscar</button>
         </div>
-        
-        <ProductList />
-      </div>
 
+        {/* Product List */}
+        <ProductList imagesProduct={imagesProduct} />
+      </main>
+
+      {/* Footer */}
       <footer className="bg-black text-white text-center py-4 mt-8">
         Footer
       </footer>
