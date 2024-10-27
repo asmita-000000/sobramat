@@ -3,7 +3,8 @@ import Home from '../views/home';
 import UploadProduct from './components/uploadProduct';
 import DetailsProduct from './components/DetailsProduct';
 import EditProduct from './components/EditProduct';
-import ListMaterial from './components/listMaterial'; // Asegúrate de importar este componente
+import ListMaterial from './components/listMaterial';
+import CategoryFilter from './components/CategoryFilter';
 
 const App = () => {
   return (
@@ -13,7 +14,8 @@ const App = () => {
         <Route path="/upload" element={<UploadProduct />} />
         <Route path="/details/:id" element={<DetailsProduct />} />
         <Route path="/edit/:id" element={<EditProduct />} />
-        <Route path="/listMaterial" element={<ListMaterial />} /> {/* Nueva ruta */}
+        <Route path="/listMaterial" element={<ListMaterial />} />
+        <Route path="/Category" element={<CategoryFilter />} />
       </Routes>
     </div>
   );
