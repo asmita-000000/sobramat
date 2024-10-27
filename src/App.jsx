@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Route, Routes , useLocation } from 'react-router-dom';
 import './App.css';
 import Home from '../views/home';
+import Register from './components/register';
 
 const  App = () => {
 
@@ -11,7 +12,9 @@ const  App = () => {
   return (
      <>
        <Routes>
-           <Route path="/"  element={<Home/>}/>
+       
+           <Route path="/"  element={<Register/>}/>
+                
        </Routes>
      </>
   )
