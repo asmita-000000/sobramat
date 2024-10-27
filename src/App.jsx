@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.css'; // Ensure Tailwind CSS styles are applied
-import CustomNavbar from './CustomNavbar';
+import CustomNavbar from './components/CustomNavbar';
 import ProductEditor from './components/ProductEditor';
 import ProductList from './components/ProductList';
 
