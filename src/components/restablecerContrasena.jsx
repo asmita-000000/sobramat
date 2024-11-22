@@ -91,9 +91,9 @@ const RestablecerContrasena = () => {
           {/* Botón de Guardar */}
           <button
             type="submit"
-            className="w-full py-2 mt-4 text-white bg-teal-900 rounded-md hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600"
+            className="w-full py-2 mt-4 text-white bg-gray-800 rounded-md hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600"
           >
-            Guardar Nueva Contraseña
+            Guardar nueva contraseña
           </button>
         </form>
       </div>
