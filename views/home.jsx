@@ -1,4 +1,6 @@
-import ListMaterial from '../src/components/listMaterial';
+//import ListMaterial from '../src/components/listMaterial';
+import ListMaterial from './components/listMaterial';
+
 import { Link } from 'react-router-dom';
 
 const Home = () => {
