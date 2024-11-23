@@ -1,5 +1,5 @@
 import React from 'react';
-import CardMaterial from './cardMaterial';
+import CardMaterial from './CardMaterial';
 
 //after we have solicitud GET of backend boys;
 const listamateriales = [

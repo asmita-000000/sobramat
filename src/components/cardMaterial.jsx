@@ -10,7 +10,7 @@ const CardMaterial = ({ material }) => {
          <img src={urlImage} alt={nombre} className="w-full h-48 object-cover" />
         </div>
         <div className="p-4">
-          <p className="font-bold text-lg mb-2">{nombre}</p>
+          <p className="font-bold text-lg mb-2">{nombre} dsf</p>
           <p className="font-bold text-xl mb-2">$ {precio}</p>
           <p>{description}</p>
         </div>
